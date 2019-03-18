@@ -1,0 +1,20 @@
+env:
+    global:
+      - DOCKER_REPO=maartje/typo-analyzer
+
+stages:
+  - name: publish
+    if: branch = master AND type = push
+
+jobs:
+  include:
+    - name: Publish new image for master
+      stage: publish
+      script:
+        - git clone https://github.com/src-d/style-analyzer.git
+        - docker build -t $DOCKER_REPO:master ./
+      after_success:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker push $DOCKER_REPO:master
+        - docker tag $DOCKER_REPO:master $DOCKER_REPO:$TRAVIS_COMMIT
+        - docker push $DOCKER_REPO:$TRAVIS_COMMIT
