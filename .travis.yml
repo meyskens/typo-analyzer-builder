@@ -19,3 +19,15 @@ jobs:
         - docker push $DOCKER_REPO:master
         - docker tag $DOCKER_REPO:master $DOCKER_REPO:$TRAVIS_COMMIT
         - docker push $DOCKER_REPO:$TRAVIS_COMMIT
+    - name: Publish new image for test
+      stage: publish
+      script:
+        - git clone https://github.com/src-d/style-analyzer.git
+        - wget https://static.eyskens.me/typo-analyzer/test_corrector.asdf
+        - mv test_corrector.asdf corrector.asdf
+        - docker build -t $DOCKER_REPO:test ./
+      after_success:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker push $DOCKER_REPO:test
+        - docker tag $DOCKER_REPO:test $DOCKER_REPO:test-$TRAVIS_COMMIT
+        - docker push $DOCKER_REPO:test-$TRAVIS_COMMIT
