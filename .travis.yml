@@ -11,7 +11,7 @@ jobs:
     - name: Publish new image for master
       stage: publish
       script:
-        - git clone https://github.com/src-d/style-analyzer.git
+        - git clone https://github.com/meyskens/style-analyzer.git -b hard-model
         - wget https://static.eyskens.me/typo-analyzer/corrector.asdf
         - docker build -t $DOCKER_REPO:master ./
       after_success:
