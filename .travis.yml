@@ -12,6 +12,7 @@ jobs:
       stage: publish
       script:
         - git clone https://github.com/src-d/style-analyzer.git
+        - wget https://static.eyskens.me/typo-analyzer/corrector.asdf
         - docker build -t $DOCKER_REPO:master ./
       after_success:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin

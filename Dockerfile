@@ -16,6 +16,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY style-analyzer/ style-analyzer
+
+COPY corrector.asdf /models/corrector.asdf
+
 RUN cd style-analyzer && \
     pip3 install -e . && \
     rm -rf /usr/local/lib/python3.6/dist-packages/pyspark/
