@@ -19,6 +19,18 @@ jobs:
         - docker push $DOCKER_REPO:master
         - docker tag $DOCKER_REPO:master $DOCKER_REPO:$TRAVIS_COMMIT
         - docker push $DOCKER_REPO:$TRAVIS_COMMIT
+    - name: Publish new image for small
+      stage: publish
+      script:
+        - git clone https://github.com/src-d/style-analyzer.git
+        - wget https://static.eyskens.me/typo-analyzer/corrector_small.asdf
+        - mv corrector_small.asdf corrector.asdf
+        - docker build -t $DOCKER_REPO:small ./
+      after_success:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker push $DOCKER_REPO:small
+        - docker tag $DOCKER_REPO:small $DOCKER_REPO:small-$TRAVIS_COMMIT
+        - docker push $DOCKER_REPO:small-$TRAVIS_COMMIT
     - name: Publish new image for test
       stage: publish
       script:
